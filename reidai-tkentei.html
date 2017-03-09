@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="ゼミ前勉強会2017　第１回" />
+  <title>ｔ検定とＲの操作</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reidai-tkentei_files/reveal.js-3.3.0/css/reveal.css"/>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="reidai-tkentei_files/reveal.js-3.3.0/css/theme/serif.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'reidai-tkentei_files/reveal.js-3.3.0/css/print/pdf.css' : 'reidai-tkentei_files/reveal.js-3.3.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+    <script src="reidai-tkentei_files/reveal.js-3.3.0/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">ｔ検定とＲの操作</h1>
+    <h2 class="author">ゼミ前勉強会2017　第１回</h2>
+    <h3 class="date">2017/3/18</h3>
+</section>
+
+<section><section class="titleslide slide level1"><h1>ｔ検定について</h1></section><section class="slide level2">
+<h2>何なの？</h2>
+<ul>
+<li>平均値の差がよく見られる差なのか，そうでないかを調べる手法。</li>
+<li>理由までわかりません。</li>
+<li>対応のあるｔ検定，対応のないｔ検定の2種ある。</li>
+</ul>
+</section><section class="slide level2">
+<h2>手順</h2>
+<ul>
+<li>データが正規性を満たしているかチェック。</li>
+<li>データが等分散なのかどうかをチェック。</li>
+<li>ｔ値を出す。</li>
+<li>自由度を計算して，ｔ分布表をチェック。</li>
+<li>p値の大きさを判断する。</li>
+<li>帰無仮説を棄却するか判断する。</li>
+</ul>
+</section></section>
+<section><section class="titleslide slide level1"><h1>めんどくさい</h1></section><section class="slide level2">
+<h2>でも，大丈夫</h2>
+<ul>
+<li>データがあれば，Rを使って一瞬で計算できる。</li>
+<li>ただし，重要語句やだいたいの意味を知っておこう。</li>
+<li>詳しい人に頼るときに役立つ。</li>
+</ul>
+<p><img src="mb11625m.jpg" /></p>
+</section></section>
+<section><section class="titleslide slide level1"><h1>分析の準備</h1></section><section class="slide level2">
+<h2>データの読み込みとコピー</h2>
+<ul>
+<li>データはGUIでインポート（読み込み）することが多いです。</li>
+<li>取り込み後，オリジナルはバックアップして，コピーをいじることにします。</li>
+<li>実演します。</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reidai &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;~/Dropbox/02-research/01-document/00JAIST/toukeibenkyou2017/reidai.csv&quot;</span>)</code></pre></div>
+</section><section class="slide level2">
+<h2>分析前の儀式</h2>
+<ul>
+<li>分析に必要なパッケージを読み込みます。</li>
+<li>右下の Packages タブからもできる。</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="co"># 入ってなければ，install.packages(&quot;tidyverse&quot;)</span>
+<span class="co"># library() のときは &quot; &quot; 不要。</span></code></pre></div>
+</section></section>
+<section><section class="titleslide slide level1"><h1>例題</h1></section><section class="slide level2">
+<h2>ｔ検定でどう分析するか</h2>
+<ul>
+<li>仮説を立てる。</li>
+<li>データセットを準備する。</li>
+<li>作図して，分布をチェック。</li>
+<li>有意水準（アルファレベル）を決める。</li>
+<li>分析するデータを準備する。</li>
+</ul>
+</section><section class="slide level2">
+<h2>仮説</h2>
+<ul>
+<li>性別によって，自宅で料理する頻度は異なるのか。</li>
+<li>有意水準は5%にしよう。</li>
+</ul>
+</section><section class="slide level2">
+<h2>分析データを作る</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(reidai)</code></pre></div>
+<pre><code>##   id nendai sex age income marriage family syoku_kenko tyoshoku gaisyoku1
+## 1  1  10dai   1  19      1        1      1           4        4         3
+## 2  2  10dai   1  18     12        1      2           2        3         4
+## 3  3  10dai   1  16     12        1      2           3        4         3
+## 4  4  10dai   1  16     12        1      2           4        4         3
+## 5  5  10dai   1  16      5        1      2           3        4         3
+## 6  6  10dai   1  17      1        1      2           5        4         3
+##   gaisyoku2 jitaku_cook tokui
+## 1         4           4     3
+## 2         5           3     2
+## 3         4           0    NA
+## 4         4           3     2
+## 5         4           0    NA
+## 6         5           5     1</code></pre>
+</section><section class="slide level2">
+<h2>さらに分析データを作る</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">male =<span class="st"> </span><span class="kw">filter</span>(reidai, sex ==<span class="st"> </span><span class="dv">1</span>)
+female =<span class="st"> </span><span class="kw">filter</span>(reidai, sex ==<span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+</section><section class="slide level2">
+<h2>分布をチェックする</h2>
+<p>まずはヒストグラム（簡単な方法）</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(male$jitaku_cook)</code></pre></div>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-5-1.png" width="768" /></p>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(female$jitaku_cook)</code></pre></div>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-6-1.png" width="768" /></p>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(reidai) +<span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">x=</span>jitaku_cook)) +<span class="st"> </span><span class="kw">facet_grid</span>(. ~<span class="st"> </span>sex)</code></pre></div>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-7-1.png" width="768" /></p>
+</section><section class="slide level2">
+<h2>密度曲線を重ねて見てみる</h2>
+<p>参考までに（そこまでは不要かと思う）。</p>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-8-1.png" width="768" /></p>
+<p>正規分布じゃないけど，今回は目をつぶろう…。</p>
+</section><section class="slide level2">
+<h2>そもそも平均値は？</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$jitaku_cook)</code></pre></div>
+<pre><code>## [1] 2.36</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(female$jitaku_cook)</code></pre></div>
+<pre><code>## [1] 4.135</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$jitaku_cook) -<span class="st"> </span><span class="kw">mean</span>(female$jitaku_cook)</code></pre></div>
+<pre><code>## [1] -1.775</code></pre>
+</section><section class="slide level2">
+<h2>対応のないｔ検定の実施</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(male$jitaku_cook, female$jitaku_cook)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  male$jitaku_cook and female$jitaku_cook
+## t = -9.8922, df = 374.26, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.127827 -1.422173
+## sample estimates:
+## mean of x mean of y 
+##     2.360     4.135</code></pre>
+</section><section class="slide level2">
+<h2>結果</h2>
+<ul>
+<li>p値は0.05よりも小さく，有意差があると言える。</li>
+<li>t値，自由度，p値，信頼区間を報告（？）</li>
+</ul>
+</section></section>
+<section><section class="titleslide slide level1"><h1>注意</h1></section><section id="p" class="slide level2">
+<h2><span class="math inline">\(p\)</span>値について</h2>
+<ul>
+<li>「差がある／ない」がわかっただけ。</li>
+<li><span class="math inline">\(p\)</span>値がどれだけ小さくても，差が大きいことを意味していない。</li>
+<li>“AMERICAN STATISTICAL ASSOCIATION RELEASES STATEMENT ON STATISTICAL SIGNIFICANCE AND P-VALUES”より</li>
+</ul>
+</section><section class="slide level2">
+
+<ul>
+<li><p>P-values do not measure the probability that the studied hypothesis is true, or the probability that the data were produced by random chance alone.</p></li>
+<li><p>Scientific conclusions and business or policy decisions should not be based only on whether a p-value passes a specific threshold.</p></li>
+<li><p>A p-value, or statistical significance, does not measure the size of an effect or the importance of a result.</p></li>
+</ul>
+</section></section>
+<section><section class="titleslide slide level1"><h1>練習しよう！</h1></section><section class="slide level2">
+<h2>問題</h2>
+<ul>
+<li>性別によって<br />
+（1）外食の好き嫌い（gaisyoku2）に違いはあるか？<br />
+（2）健康を意識した食生活（syoku_kenko）に違いはあるか？<br />
+（3）外食の頻度（gaisyoku1）は違うのか？</li>
+</ul>
+</section><section class="slide level2">
+<h2>分析ステップ</h2>
+<ul>
+<li>データを準備する（すでにある male／female を使う）</li>
+<li>図示してデータをチェックする<br />
+hist(male$〜〜)という感じで。</li>
+<li>平均値をチェックする<br />
+mean(male$〜〜) という感じで。</li>
+<li>t.test() を使ってｔ検定を行う。</li>
+</ul>
+</section></section>
+<section><section class="titleslide slide level1"><h1>第一問</h1></section><section class="slide level2">
+<h2>密度曲線</h2>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-11-1.png" width="768" /></p>
+</section><section class="slide level2">
+<h2>そもそも平均はどうなっている？</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$gaisyoku2)</code></pre></div>
+<pre><code>## [1] 3.765</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(female$gaisyoku2)</code></pre></div>
+<pre><code>## [1] 4.055</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$gaisyoku2) -<span class="st"> </span><span class="kw">mean</span>(female$gaisyoku2)</code></pre></div>
+<pre><code>## [1] -0.29</code></pre>
+</section><section class="slide level2">
+<h2>平均値の差はあるのだろうか？</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(male$gaisyoku2, female$gaisyoku2)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  male$gaisyoku2 and female$gaisyoku2
+## t = -2.6343, df = 393.84, p-value = 0.008765
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.50643344 -0.07356656
+## sample estimates:
+## mean of x mean of y 
+##     3.765     4.055</code></pre>
+</section></section>
+<section><section class="titleslide slide level1"><h1>第二問</h1></section><section class="slide level2">
+<h2>データの分布</h2>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-14-1.png" width="768" /></p>
+</section><section class="slide level2">
+
+<ul>
+<li>大部分はコピペでOK！</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$syoku_kenko)</code></pre></div>
+<pre><code>## [1] 3.68</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(female$syoku_kenko)</code></pre></div>
+<pre><code>## [1] 4.075</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$syoku_kenko) -<span class="st"> </span><span class="kw">mean</span>(female$syoku_kenko)</code></pre></div>
+<pre><code>## [1] -0.395</code></pre>
+</section><section class="slide level2">
+<h2>対応のないｔ検定の結果</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(male$syoku_kenko, female$syoku_kenko)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  male$syoku_kenko and female$syoku_kenko
+## t = -3.5053, df = 378.84, p-value = 0.0005107
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.6165704 -0.1734296
+## sample estimates:
+## mean of x mean of y 
+##     3.680     4.075</code></pre>
+</section></section>
+<section><section class="titleslide slide level1"><h1>第三問</h1></section><section class="slide level2">
+<h2>分布は？</h2>
+<p><img src="reidai-tkentei_files/figure-revealjs/unnamed-chunk-17-1.png" width="768" /></p>
+</section><section class="slide level2">
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(male$gaisyoku1)</code></pre></div>
+<pre><code>## [1] 3.025</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(female$gaisyoku1)</code></pre></div>
+<pre><code>## [1] 2.99</code></pre>
+</section><section class="slide level2">
+<h2>対応のないｔ検定</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(male$gaisyoku1, female$gaisyoku1)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  male$gaisyoku1 and female$gaisyoku1
+## t = 0.25314, df = 377.59, p-value = 0.8003
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2368641  0.3068641
+## sample estimates:
+## mean of x mean of y 
+##     3.025     2.990</code></pre>
+</section></section>
+<section><section class="titleslide slide level1"><h1>対応のあるｔ検定について</h1></section><section class="slide level2">
+<h2>いつ使う？</h2>
+<ul>
+<li>分析対象が同じとき</li>
+<li>何らかの「介入」をした前後</li>
+<li>昨年と今年の違い</li>
+<li>同じ人物のイベントの違いとか</li>
+</ul>
+</section><section class="slide level2">
+<h2>やってみよう</h2>
+<ul>
+<li>同じ人たちの支出と収入を比べる。</li>
+<li>「支出と収入は同じである（差がない）」が帰無仮説</li>
+<li><code>t.test(x, y, paired = T)</code></li>
+<li>T は TRUE の略です。</li>
+</ul>
+</section><section class="slide level2">
+<h2>分析</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taiouaru &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;~/Dropbox/02-research/01-document/00JAIST/toukeibenkyou2017/taiouaru2.csv&quot;</span>)</code></pre></div>
+<p>要約を見てみる。</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(taiouaru)</code></pre></div>
+<pre><code>##        id          expenditure         income      
+##  Min.   :  1.00   Min.   : 0.000   Min.   : 0.000  
+##  1st Qu.: 37.50   1st Qu.: 3.000   1st Qu.: 3.000  
+##  Median : 74.00   Median : 5.000   Median : 5.000  
+##  Mean   : 73.43   Mean   : 5.769   Mean   : 5.301  
+##  3rd Qu.:109.50   3rd Qu.: 6.500   3rd Qu.: 7.000  
+##  Max.   :145.00   Max.   :20.000   Max.   :18.000</code></pre>
+</section><section class="slide level2">
+<h2>対応のあるｔ検定をやってみよう。</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(taiouaru$expenditure, taiouaru$income, <span class="dt">paired =</span> T)</code></pre></div>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  taiouaru$expenditure and taiouaru$income
+## t = 2.0747, df = 142, p-value = 0.03982
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.02210418 0.91495876
+## sample estimates:
+## mean of the differences 
+##               0.4685315</code></pre>
+</section></section>
+<section><section class="titleslide slide level1"><h1>本日のまとめ</h1></section><section id="take-home-messages" class="slide level2">
+<h2>take-home messages</h2>
+<ul>
+<li>平均値の差の検定はｔ検定。 t.test(X, Y)</li>
+<li>「対応のある・なし」がある。</li>
+<li>分析対象が同じなら「対応あり」。<br />
+t.test(X, Y, paired = TRUE)</li>
+<li>データは正規分布に従っているのが前提。</li>
+<li>有意水準αは分析前に決める。</li>
+<li>p値が0.05（今回）を下回れば有意差がある。</li>
+<li>p値が小さいほど効果があるというわけではない。</li>
+</ul>
+</section><section class="slide level2">
+<h2>参考文献・出典</h2>
+<ul>
+<li>株式会社マーシュ「自炊と健康意識に関するアンケート調査」<br />
+<a href="https://www.marsh-research.co.jp/examine/2809jisui.html" class="uri">https://www.marsh-research.co.jp/examine/2809jisui.html</a></li>
+<li>対応のあるｔ検定のデータ入手先 <a href="http://www.koka.ac.jp/morigiwa/sjs/data1.htm" class="uri">http://www.koka.ac.jp/morigiwa/sjs/data1.htm</a></li>
+<li>ｔ検定の詳しい説明<br />
+<a href="https://istat.co.jp/sk_commentary/population_mean" class="uri">https://istat.co.jp/sk_commentary/population_mean</a></li>
+<li>ASAのp値に関するステートメント <a href="http://amstat.tandfonline.com/doi/abs/10.1080/00031305.2016.1154108" class="uri">http://amstat.tandfonline.com/doi/abs/10.1080/00031305.2016.1154108</a></li>
+</ul>
+</section><section class="slide level2">
+<h2>補足</h2>
+<p>正規分布じゃないでしょ，と言われたら<br />
+Brunner-Munzel検定</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lawstat)
+<span class="kw">brunner.munzel.test</span>(male$jitaku_cook, female$jitaku_cook)</code></pre></div>
+<pre><code>## 
+##  Brunner-Munzel Test
+## 
+## data:  male$jitaku_cook and female$jitaku_cook
+## Brunner-Munzel Test Statistic = 10.794, df = 390.79, p-value &lt;
+## 2.2e-16
+## 95 percent confidence interval:
+##  0.7038697 0.7946803
+## sample estimates:
+## P(X&lt;Y)+.5*P(X=Y) 
+##         0.749275</code></pre>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reidai-tkentei_files/reveal.js-3.3.0/lib/js/head.min.js"></script>
+  <script src="reidai-tkentei_files/reveal.js-3.3.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+        // Optional reveal.js plugins
+        dependencies: [
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
